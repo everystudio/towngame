@@ -4,14 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using anogamelib;
 
-public class CardController : MonoBehaviour,IBeginDragHandler,IEndDragHandler,IDragHandler,IPointerClickHandler
+public class CardController : StateMachineBase<CardController>,IBeginDragHandler,IEndDragHandler,IDragHandler,IPointerClickHandler
 {
     public ARROW_DIR m_arrowDir;
     public CARD_COLOR m_cardColor;
 
     public Image m_imgCardBase;
     public Image m_imgArrow;
+
+    private void Start()
+    {
+        SetState(new CardController.Idle(this));
+    }
 
     private void OnValidate()
     {
@@ -22,7 +28,6 @@ public class CardController : MonoBehaviour,IBeginDragHandler,IEndDragHandler,ID
         if(m_imgArrow == null)
         {
             m_imgArrow = transform.Find("areaCenter/imgArrow").GetComponent<Image>();
-
         }
         //Debug.Log("OnValidate");
         SetColor(m_cardColor);
@@ -39,16 +44,13 @@ public class CardController : MonoBehaviour,IBeginDragHandler,IEndDragHandler,ID
         m_imgArrow.gameObject.transform.localRotation = Quaternion.Euler(0, 0, eular_dir);
     }
 
-
     public void OnBeginDrag(PointerEventData eventData)
     {
     }
-
     public void OnDrag(PointerEventData eventData)
     {
         transform.Translate(eventData.delta);
     }
-
     public void OnEndDrag(PointerEventData eventData)
     {
     }
@@ -56,5 +58,12 @@ public class CardController : MonoBehaviour,IBeginDragHandler,IEndDragHandler,ID
     public void OnPointerClick(PointerEventData eventData)
     {
         GameMain.Instance.SelectCard(this);
+    }
+
+    private class Idle : StateBase<CardController>
+    {
+        public Idle(CardController _machine) : base(_machine)
+        {
+        }
     }
 }
