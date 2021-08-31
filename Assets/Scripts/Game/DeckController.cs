@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using anogamelib;
 
 public class DeckController : MonoBehaviour
 {
@@ -13,6 +14,14 @@ public class DeckController : MonoBehaviour
     public GameObject m_prefCard;
 
     public HandCardController m_handCardController;
+
+    public EventString GameStartRequest;
+
+    private void Awake()
+    {
+        GameStartRequest.AddListener(GameStartRequestHandler);
+    }
+
 
     [System.Obsolete]
     public void Fill()
@@ -31,7 +40,13 @@ public class DeckController : MonoBehaviour
         */
     }
 
-    void Update()
+    public void GameStartRequestHandler(string _strMessage)
     {
+        for( int i = 0; i < 5; i++)
+        {
+            Fill();
+        }
     }
+
+
 }

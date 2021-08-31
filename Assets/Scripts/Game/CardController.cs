@@ -28,6 +28,8 @@ public class CardController : StateMachineBase<CardController>,IBeginDragHandler
     public Image m_imgCardBase;
     public Image m_imgArrow;
 
+    public bool m_bDebugMove = false;
+
     public CardEvent OnClick = new CardEvent();
 
 
@@ -76,14 +78,19 @@ public class CardController : StateMachineBase<CardController>,IBeginDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        GetComponent<Image>().raycastTarget = false;
     }
     public void OnDrag(PointerEventData eventData)
     {
         // カードの移動処理はいらないのでカット
-        //transform.Translate(eventData.delta);
+        if (m_bDebugMove)
+        {
+            transform.Translate(eventData.delta);
+        }
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+        GetComponent<Image>().raycastTarget = true;
     }
 
     public void OnPointerClick(PointerEventData eventData)
