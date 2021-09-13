@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 using anogamelib;
+using DG.Tweening;
 
 public enum CARD_STATUS
 {
@@ -61,6 +62,25 @@ public class CardController : StateMachineBase<CardController>,IBeginDragHandler
     {
         int eular_dir = Defines.arrow_dirs[(int)_arrowDir];
         m_imgArrow.gameObject.transform.localRotation = Quaternion.Euler(0, 0, eular_dir);
+    }
+    public bool CanPlay(ARROW_DIR _dir, CARD_COLOR _color)
+    {
+        bool bRet = false;
+        if( m_arrowDir == _dir || m_cardColor == _color)
+        {
+            bRet = true;
+        }
+        return bRet;
+    }
+    public void DeleteRequest()
+    {
+        float fDulation = 0.25f;
+        foreach(Graphic g in GetComponentsInChildren<Graphic>())
+        {
+            g.DOFade(0, fDulation);
+        }
+        Destroy(gameObject, fDulation);
+
     }
 
     [Obsolete]

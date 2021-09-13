@@ -29,6 +29,13 @@ public class Defines
 		180,
 		270
 	};
+	public static readonly Vector2Int[] arrow_vecs = new Vector2Int[(int)ARROW_DIR.MAX]
+	{
+		new Vector2Int(0,1),
+		new Vector2Int(-1,0),
+		new Vector2Int(0,-1),
+		new Vector2Int(1,0),
+	};
 	public static readonly Color[] card_colors = new Color[(int)CARD_COLOR.MAX]
 	{
 		new Color(1.0f,0.0f,0.0f),

@@ -10,15 +10,30 @@ public class HandCardController : MonoBehaviour
     public Transform m_tfTargetRight;
     public List<GameObject> m_goCardList;
 
+    public int GetCanPlayCardNum(ARROW_DIR _dir , CARD_COLOR _color)
+    {
+        int iRet = 0;
+        for (int i = 0; i < m_goCardList.Count; i++)
+        {
+            CardController card = m_goCardList[i].GetComponent<CardController>();
+            if( card.CanPlay(_dir, _color))
+            {
+                iRet += 1;
+            }
+        }
+        return iRet;
+    }
+
     public void SelectCardListener(CardController _card)
     {
         //Debug.Log("SelectCardListener");
-        if (GameMain.Instance.SelectCard(_card)) {
-            _card.m_eStatus = CARD_STATUS.FIELD;
-            _card.OnClick.RemoveListener(SelectCardListener);
-
-            m_goCardList.Remove(_card.gameObject);
-
+        if (GameMain.Instance.SelectCard(_card, () =>
+       {
+           _card.m_eStatus = CARD_STATUS.FIELD;
+           _card.OnClick.RemoveListener(SelectCardListener);
+           m_goCardList.Remove(_card.gameObject);
+       }))
+        {
             PositionReset();
         }
     }
@@ -33,9 +48,7 @@ public class HandCardController : MonoBehaviour
     public void PositionReset()
     {
         Vector3 positionLeft = m_tfTargetLeft.GetComponent<RectTransform>().position;
-        Vector3 positionDiff =
-            m_tfTargetRight.GetComponent<RectTransform>().position
-         - m_tfTargetLeft.GetComponent<RectTransform>().position;
+        Vector3 positionDiff = m_tfTargetRight.GetComponent<RectTransform>().position - positionLeft;
         Vector3 positionDelta = positionDiff / (m_goCardList.Count + 1);
 
         for ( int i = 0; i< m_goCardList.Count; i++)
@@ -50,6 +63,16 @@ public class HandCardController : MonoBehaviour
 
     }
 
+    public void DeleteAll()
+    {
+        foreach(GameObject obj in m_goCardList)
+        {
+            obj.GetComponent<CardController>().DeleteRequest();
+            //_card.OnClick.RemoveListener(SelectCardListener);
+        }
+        m_goCardList.Clear();
+
+    }
 
 
 }
